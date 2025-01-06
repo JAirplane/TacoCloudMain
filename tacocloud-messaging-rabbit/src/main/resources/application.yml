@@ -1,0 +1,8 @@
+spring:
+ application:
+  name: tacocloud-messaging-rabbit
+ rabbitmq:
+  host: localhost
+  port: 5673
+  username: guest
+  password: ja09091990

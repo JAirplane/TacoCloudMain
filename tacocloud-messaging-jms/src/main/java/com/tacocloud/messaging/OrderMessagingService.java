@@ -1,4 +1,4 @@
-package com.tacocloud.messaging.jms;
+package com.tacocloud.messaging;
 
 import com.tacocloud.domain.TacoOrder;
 

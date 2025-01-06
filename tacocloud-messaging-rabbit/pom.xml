@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.tacocloud</groupId>
-	<artifactId>tacocloud-messaging-jms</artifactId>
+	<artifactId>tacocloud-messaging-rabbit</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>tacocloud-messaging-jms</name>
-	<description>Demo project for Spring Boot</description>
+	<name>tacocloud-messaging-rabbit</name>
+	<description>RabbitMQ module for tacocloud</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -39,7 +39,7 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-artemis</artifactId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
 		</dependency>
 
 		<dependency>
@@ -47,7 +47,6 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-    </dependencies>
+	</dependencies>
 
 </project>

@@ -38,8 +38,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>tacos</groupId>
-			<artifactId>tacocloud-messaging-jms</artifactId>
+			<groupId>com.tacocloud</groupId>
+			<artifactId>tacocloud-messaging-rabbit</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 

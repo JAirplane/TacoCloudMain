@@ -11,6 +11,7 @@
         <option value="$PROJECT_DIR$/../authorization/pom.xml" />
         <option value="$PROJECT_DIR$/../restclient/pom.xml" />
         <option value="$PROJECT_DIR$/../kitchen/pom.xml" />
+        <option value="$PROJECT_DIR$/tacocloud-messaging-rabbit/pom.xml" />
       </list>
     </option>
   </component>

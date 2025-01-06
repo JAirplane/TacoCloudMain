@@ -13,6 +13,7 @@
         <module>tacocloud</module>
         <module>tacocloud-domain</module>
         <module>tacocloud-messaging-jms</module>
+        <module>tacocloud-messaging-rabbit</module>
     </modules>
 
     <properties>

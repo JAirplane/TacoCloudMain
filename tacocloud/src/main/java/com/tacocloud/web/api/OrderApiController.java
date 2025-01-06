@@ -4,7 +4,7 @@ import com.tacocloud.data.OrderRepository;
 import com.tacocloud.data.TacoRepository;
 import com.tacocloud.domain.Taco;
 import com.tacocloud.domain.TacoOrder;
-import com.tacocloud.messaging.jms.OrderMessagingService;
+import com.tacocloud.messaging.OrderMessagingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
