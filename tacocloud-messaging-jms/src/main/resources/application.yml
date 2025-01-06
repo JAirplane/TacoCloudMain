@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: tacocloud-messaging-jms
+  artemis:
+    host: localhost
+    port: 61617
+    user: admin
+    password: password
+jms-destination: tacocloud.order.queue
