@@ -2,8 +2,8 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/tacocloud" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../authorization" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../kitchen" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../restclient" vcs="Git" />
   </component>
 </project>
