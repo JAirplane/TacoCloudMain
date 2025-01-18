@@ -13,6 +13,7 @@
         <option value="$PROJECT_DIR$/../kitchen/pom.xml" />
         <option value="$PROJECT_DIR$/tacocloud-messaging-rabbit/pom.xml" />
         <option value="$PROJECT_DIR$/tacocloud-messaging-kafka/pom.xml" />
+        <option value="$PROJECT_DIR$/../email/pom.xml" />
       </list>
     </option>
   </component>

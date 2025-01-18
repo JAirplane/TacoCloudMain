@@ -9,6 +9,7 @@
     <file url="file://$PROJECT_DIR$/tacocloud-messaging-rabbit/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/tacocloud/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/../authorization/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../email/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/../kitchen/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/../restclient/src/main/java" charset="UTF-8" />
   </component>

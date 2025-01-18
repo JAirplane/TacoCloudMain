@@ -11,9 +11,13 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties(prefix = "taco.orders")
 @Data
 @Validated
-public class OrderProps {
+public class PagingProps {
 
     @Min(value = 5, message = "Page size must be at least 5 characters long")
     @Max(value = 25, message = "Page size must be at most 25 characters long")
-    private int pageSize = 20;
+    private int ordersPageSize = 20;
+
+    @Min(value = 5, message = "Page size must be at least 5 characters long")
+    @Max(value = 25, message = "Page size must be at most 25 characters long")
+    private int tacosPageSize = 20;
 }

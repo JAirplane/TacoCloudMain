@@ -5,14 +5,15 @@ import com.tacocloud.domain.TacoOrder;
 import com.tacocloud.domain.TacoUser;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/orders")
@@ -20,12 +21,12 @@ import org.springframework.web.bind.support.SessionStatus;
 public class OrderController {
 
     private final OrderRepository orderRepository;
-    private final OrderProps orderProps;
+    private final PagingProps pagingProps;
 
     @Autowired
-    public OrderController(OrderRepository orderRepository, OrderProps orderProps) {
+    public OrderController(OrderRepository orderRepository, PagingProps pagingProps) {
         this.orderRepository = orderRepository;
-        this.orderProps = orderProps;
+        this.pagingProps = pagingProps;
     }
 
     @GetMapping("/current")
@@ -66,8 +67,11 @@ public class OrderController {
 
     @GetMapping
     public String ordersForUser(@AuthenticationPrincipal TacoUser user, Model model) {
-        Pageable pageable = PageRequest.of(0, orderProps.getPageSize());
-        model.addAttribute("orders", orderRepository.findByUserOrderByPlacedAtDesc(user, pageable));
+        Mono<List<TacoOrder>> orders = orderRepository.findAll()
+                .sort((order1, order2) -> order1.getPlacedAt().compareTo(order2.getPlacedAt()))
+                .take(pagingProps.getOrdersPageSize())
+                .collectList();
+        model.addAttribute("orders", orders.block());
         return "orderList";
     }
 }

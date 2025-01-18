@@ -1,6 +1,7 @@
 package com.tacocloud.security;
 
 import com.tacocloud.data.UserRepository;
+import com.tacocloud.domain.Taco;
 import com.tacocloud.domain.TacoUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,7 +34,8 @@ public class UserRepositoryUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        TacoUser user = userRepository.findByUsername(username);
+        var userMono = userRepository.findByUsername(username);
+        TacoUser user = userMono.block();
         if(user != null) return user;
         throw new UsernameNotFoundException("User ‘" + username + "’ not found");
     }

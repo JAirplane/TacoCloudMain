@@ -4,19 +4,14 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:9000/oauth2/jwks
-  datasource:
-    url: jdbc:postgresql://localhost:5432/TacoCloud
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/TacoCloud
     username: TacoCloud
     password: 123
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
   data:
+    r2dbc:
+      repositories:
+        enabled: true
     rest:
       base-path: /data-api
   rabbitmq:
@@ -33,5 +28,7 @@ spring:
     template:
       default-topic: orders
 taco:
+  tacos:
+    tacosPageSize: 12
   orders:
-    pageSize: 10
+    ordersPageSize: 10

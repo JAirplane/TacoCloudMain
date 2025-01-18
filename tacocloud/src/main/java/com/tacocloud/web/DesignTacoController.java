@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ public class DesignTacoController {
     @ModelAttribute
     public void addIngredientsToModel(Model model) {
         List<Ingredient> ingredients = new ArrayList<>();
-        ingredientRepo.findAll().forEach(ingredients::add);
+        ingredientRepo.findAll().map(ingredients::add);
 
         Ingredient.Type[] types = Ingredient.Type.values();
         for (Ingredient.Type type : types) {
@@ -80,8 +81,8 @@ public class DesignTacoController {
             return "design";
         }
 
-        Taco saved = tacoRepo.save(taco);
-        tacoOrder.addTaco(saved);
+        Mono<Taco> saved = tacoRepo.save(taco);
+        tacoOrder.addTaco(saved.block());
 
         return "redirect:/orders/current";
     }

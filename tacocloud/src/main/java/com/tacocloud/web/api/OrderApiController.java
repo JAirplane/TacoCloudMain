@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
@@ -30,20 +32,20 @@ public class OrderApiController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<TacoOrder> getOrderById(@PathVariable("id") Long id) {
-        var orderOpt = orderRepository.findById(id);
-        return orderOpt.map(tacoOrder -> new ResponseEntity<>(tacoOrder, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+    public Mono<ResponseEntity<TacoOrder>> getOrderById(@PathVariable("id") Long id) {
+        return orderRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @GetMapping
-    public Iterable<TacoOrder> allOrders() {
+    public Flux<TacoOrder> allOrders() {
         return orderRepository.findAll();
     }
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public TacoOrder postTacoOrder(@RequestBody TacoOrder order) {
+    public Mono<TacoOrder> postTacoOrder(@RequestBody TacoOrder order) {
         msgService.sendOrder(order);
         for(Taco taco: order.getTacos()) {
             tacoRepository.save(taco);
@@ -52,54 +54,55 @@ public class OrderApiController {
     }
 
     @PutMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<TacoOrder> putTacoOrder(@PathVariable("id") Long id, @RequestBody TacoOrder tacoOrder) {
-        Optional<TacoOrder> oldOrder = orderRepository.findById(id);
-        if(oldOrder.isEmpty()) return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        oldOrder.ifPresent(order -> tacoOrder.setUser(order.getUser()));
-        oldOrder.ifPresent(order -> tacoOrder.setTacos(order.getTacos()));
-        tacoOrder.setId(id);
-
-        return new ResponseEntity<>(orderRepository.save(tacoOrder), HttpStatus.OK);
+    public Mono<ResponseEntity<TacoOrder>> putTacoOrder(@PathVariable("id") Long id, @RequestBody TacoOrder tacoOrder) {
+        return orderRepository.findById(id)
+                .map(order -> {
+                       tacoOrder.setUser(order.getUser());
+                       tacoOrder.setTacos(order.getTacos());
+                       tacoOrder.setId(id);
+                       orderRepository.save(tacoOrder);
+                       return ResponseEntity.ok(tacoOrder);
+                   })
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<TacoOrder> patchTacoOrder(@PathVariable("id") Long id, @RequestBody TacoOrder patch) {
-        Optional<TacoOrder> oldOrder = orderRepository.findById(id);
-        if(oldOrder.isPresent()) {
-            var old = oldOrder.get();
-            if (patch.getDeliveryName() != null) {
-                old.setDeliveryName(patch.getDeliveryName());
-            }
-            if (patch.getDeliveryStreet() != null) {
-                old.setDeliveryStreet(patch.getDeliveryStreet());
-            }
-            if (patch.getDeliveryCity() != null) {
-                old.setDeliveryCity(patch.getDeliveryCity());
-            }
-            if (patch.getDeliveryState() != null) {
-                old.setDeliveryState(patch.getDeliveryState());
-            }
-            if (patch.getDeliveryZip() != null) {
-                old.setDeliveryZip(patch.getDeliveryState());
-            }
-            if (patch.getCcNumber() != null) {
-                old.setCcNumber(patch.getCcNumber());
-            }
-            if (patch.getCcExpiration() != null) {
-                old.setCcExpiration(patch.getCcExpiration());
-            }
-            if (patch.getCcCVV() != null) {
-                old.setCcCVV(patch.getCcCVV());
-            }
-            orderRepository.save(old);
-            return new ResponseEntity<>(old, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    public Mono<ResponseEntity<TacoOrder>> patchTacoOrder(@PathVariable("id") Long id, @RequestBody TacoOrder patch) {
+        return orderRepository.findById(id)
+                .map(order -> {
+                        if (patch.getDeliveryName() != null) {
+                            order.setDeliveryName(patch.getDeliveryName());
+                        }
+                        if (patch.getDeliveryStreet() != null) {
+                            order.setDeliveryStreet(patch.getDeliveryStreet());
+                        }
+                        if (patch.getDeliveryCity() != null) {
+                            order.setDeliveryCity(patch.getDeliveryCity());
+                        }
+                        if (patch.getDeliveryState() != null) {
+                            order.setDeliveryState(patch.getDeliveryState());
+                        }
+                        if (patch.getDeliveryZip() != null) {
+                            order.setDeliveryZip(patch.getDeliveryZip());
+                        }
+                        if (patch.getCcNumber() != null) {
+                            order.setCcNumber(patch.getCcNumber());
+                        }
+                        if (patch.getCcExpiration() != null) {
+                            order.setCcExpiration(patch.getCcExpiration());
+                        }
+                        if (patch.getCcCVV() != null) {
+                            order.setCcCVV(patch.getCcCVV());
+                        }
+                        orderRepository.save(order);
+                        return new ResponseEntity<>(order, HttpStatus.OK);
+                })
+                .defaultIfEmpty(new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteOrder(@PathVariable("id") Long id) {
-            orderRepository.deleteById(id);
+        orderRepository.deleteById(id);
     }
 }

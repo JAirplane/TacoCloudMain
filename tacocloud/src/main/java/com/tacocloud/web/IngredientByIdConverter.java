@@ -27,7 +27,6 @@ public class IngredientByIdConverter implements Converter<String, Ingredient> {
     @Override
     public Ingredient convert(@Nullable String ingredientId) {
         if(ingredientId == null) return null;
-        var taco = ingredientRepository.findById(ingredientId);
-        return taco.orElse(null);
+        return ingredientRepository.findById(ingredientId).block();
     }
 }
