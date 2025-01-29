@@ -17,15 +17,13 @@ public class RegistrationForm {
     private String phone;
 
     public TacoUser toUser(PasswordEncoder passwordEncoder) {
-        return new TacoUser(
-                username,
-                passwordEncoder.encode(password),
-                fullname,
-                street,
-                city,
-                state,
-                zip,
-                phone
-        );
+        var user = new TacoUser(username, passwordEncoder.encode(password));
+        user.setFullname(fullname);
+        user.setStreet(street);
+        user.setCity(city);
+        user.setState(state);
+        user.setZip(zip);
+        user.setPhoneNumber(phone);
+        return user;
     }
 }

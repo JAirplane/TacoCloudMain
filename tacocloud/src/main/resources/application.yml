@@ -35,3 +35,5 @@ spring:
 taco:
   orders:
     pageSize: 10
+  tacos:
+    pageSize: 12

@@ -6,8 +6,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 
 @Data
 @Entity
@@ -22,9 +22,13 @@ public class Taco {
     @Size(min=5, message="Name must be at least 5 characters long")
     private String name;
 
-    private Date createdAt = new Date();
+    private LocalDate createdAt = LocalDate.now();
 
-    @ManyToMany(targetEntity = Ingredient.class)
+    @ManyToMany
     @Size(min=1, message="You must choose at least 1 ingredient")
-    private List<Ingredient> ingredients;
+    private List<Ingredient> ingredients = new ArrayList<>();
+
+    public void addIngredient(Ingredient ingredient) {
+        ingredients.add(ingredient);
+    }
 }

@@ -1,10 +1,7 @@
 package com.tacocloud.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,17 +25,21 @@ public class TacoUser implements UserDetails {
     private Long id;
 
     private final String username;
-
     private final String password;
-    private final String fullname;
-    private final String street;
-    private final String city;
-    private final String state;
-    private final String zip;
-    private final String phoneNumber;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
+    private String fullname;
+    private String street;
+    private String city;
+    private String state;
+    private String zip;
+    private String phoneNumber;
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private final List<TacoOrder> tacoOrders = new ArrayList<>();
+
+    public void addOrder(TacoOrder order) {
+        tacoOrders.add(order);
+    }
     /**
      * Returns the authorities granted to the user. Cannot return <code>null</code>.
      *

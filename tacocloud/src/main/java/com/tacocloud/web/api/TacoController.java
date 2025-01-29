@@ -2,6 +2,7 @@ package com.tacocloud.web.api;
 
 import com.tacocloud.data.TacoRepository;
 import com.tacocloud.domain.Taco;
+import com.tacocloud.services.TacoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,22 +16,24 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins="http://tacocloud:8080")
 public class TacoController {
 
+    private final TacoService tacoService;
     private final TacoRepository tacoRepo;
 
     @Autowired
-    public TacoController(TacoRepository tacoRepo) {
+    public TacoController(TacoRepository tacoRepo, TacoService tacoService) {
+
         this.tacoRepo = tacoRepo;
+        this.tacoService = tacoService;
     }
 
     @GetMapping(params = "recent")
     public Iterable<Taco> recentTacos() {
-        Pageable page = PageRequest.of(0, 12, Sort.by("createdAt").descending());
-        return tacoRepo.findAll(page).getContent();
+        return tacoService.getRecentTacos();
     }
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<Taco> getTaco(@PathVariable("id") Long id) {
-        var taco = tacoRepo.findById(id);
+        var taco = tacoService.getTacoById(id);
         return taco.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
