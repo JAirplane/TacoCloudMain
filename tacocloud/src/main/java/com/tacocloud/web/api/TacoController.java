@@ -17,12 +17,9 @@ import org.springframework.web.bind.annotation.*;
 public class TacoController {
 
     private final TacoService tacoService;
-    private final TacoRepository tacoRepo;
 
     @Autowired
-    public TacoController(TacoRepository tacoRepo, TacoService tacoService) {
-
-        this.tacoRepo = tacoRepo;
+    public TacoController(TacoService tacoService) {
         this.tacoService = tacoService;
     }
 
@@ -39,8 +36,9 @@ public class TacoController {
     }
 
     @PostMapping(consumes = "application/json")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Taco postTaco(@RequestBody Taco taco) {
-        return tacoRepo.save(taco);
+    public ResponseEntity<Taco> postTaco(@RequestBody Taco taco) {
+        var tacoOptional = tacoService.saveTaco(taco);
+        return tacoOptional.map(value -> new ResponseEntity<>(value, HttpStatus.CREATED))
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NO_CONTENT));
     }
 }

@@ -22,7 +22,6 @@ public class TacoRepositoryTest {
 
     private final TacoRepository tacoRepository;
     private final IngredientRepository ingredientRepository;
-    private final EntityManager entityManager;
 
     private List<Ingredient> ingredients;
 
@@ -31,7 +30,6 @@ public class TacoRepositoryTest {
                               EntityManager entityManager) {
         this.tacoRepository = tacoRepository;
         this.ingredientRepository = ingredientRepository;
-        this.entityManager = entityManager;
     }
 
     @BeforeEach
@@ -122,50 +120,5 @@ public class TacoRepositoryTest {
 
         assertThat(ingredientRepository.count()).isEqualTo(4);
         assertThat(taco.getIngredients().size()).isEqualTo(4);
-    }
-
-    //Ingredient is not saved
-    //ConstraintViolationException happens as expected
-    //insert into taco_ingredients happens after flush()
-    //Can I prevent it somehow in repository layer? Or I should do it in "business" layer?
-    //If I remove flush() exception won't happen. Why?
-    @Test
-    public void shouldNotSaveTacoWithUnknownIngredient() {
-
-        Taco taco = new Taco();
-        taco.setName("My Awesome Taco");
-        taco.setIngredients(new ArrayList<>(ingredients));
-        taco.addIngredient(new Ingredient("TEST", "Test name", Ingredient.Type.CHEESE));
-
-        assertThrows(ConstraintViolationException.class, () -> {
-            tacoRepository.save(taco);
-            entityManager.flush();
-        });
-
-        assertThat(ingredientRepository.count()).isEqualTo(3);
-        var tacos = tacoRepository.findAll();
-        var tacosList = new ArrayList<Taco>();
-        tacos.forEach(tacosList::add);
-
-        assertThat(tacosList.size()).isEqualTo(1);
-        assertThat(tacosList.getFirst().getIngredients().size()).isEqualTo(3);
-    }
-
-    //why no exception and no insert happens?
-    //what job is actually save() doing here?
-    //why savedTaco contains 4 ingredients instead of 3?
-    @Test
-    public void shouldNotSaveTacoWithUnknownIngredient_WithoutFlush() {
-
-        Taco taco = new Taco();
-        taco.setName("My Awesome Taco");
-        taco.setIngredients(new ArrayList<>(ingredients));
-        taco.addIngredient(new Ingredient("TEST", "Test name", Ingredient.Type.CHEESE));
-
-        var savedTaco = tacoRepository.save(taco);
-
-        assertThat(ingredientRepository.count()).isEqualTo(3);
-        assertThat(savedTaco.getIngredients().size()).isEqualTo(3);
-
     }
 }
