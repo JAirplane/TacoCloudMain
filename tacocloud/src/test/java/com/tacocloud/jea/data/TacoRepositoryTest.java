@@ -54,9 +54,7 @@ public class TacoRepositoryTest {
     @Test
     public void shouldSaveTaco() {
 
-        Taco taco = new Taco();
-        taco.setName("My Awesome Taco");
-        taco.setIngredients(ingredients);
+        Taco taco = testTaco();
 
         Taco receivedTaco = tacoRepository.save(taco);
 
@@ -68,9 +66,7 @@ public class TacoRepositoryTest {
     @Test
     public void shouldDeleteTacoAndNotTheIngredients() {
 
-        Taco taco = new Taco();
-        taco.setName("My Awesome Taco");
-        taco.setIngredients(ingredients);
+        Taco taco = testTaco();
 
         taco = tacoRepository.save(taco);
 
@@ -83,9 +79,7 @@ public class TacoRepositoryTest {
     @Test
     public void shouldDeleteIngredientFromTaco() {
 
-        Taco taco = new Taco();
-        taco.setName("My Awesome Taco");
-        taco.setIngredients(ingredients);
+        Taco taco = testTaco();
 
         taco = tacoRepository.save(taco);
 
@@ -104,9 +98,7 @@ public class TacoRepositoryTest {
     @Test
     public void shouldAddIngredientToTaco() {
 
-        Taco taco = new Taco();
-        taco.setName("My Awesome Taco");
-        taco.setIngredients(ingredients);
+        Taco taco = testTaco();
 
         taco = tacoRepository.save(taco);
 
@@ -120,5 +112,12 @@ public class TacoRepositoryTest {
 
         assertThat(ingredientRepository.count()).isEqualTo(4);
         assertThat(taco.getIngredients().size()).isEqualTo(4);
+    }
+
+    private Taco testTaco() {
+        Taco taco = new Taco();
+        taco.setName("My Awesome Taco");
+        taco.setIngredients(ingredients);
+        return taco;
     }
 }

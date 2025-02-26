@@ -3,6 +3,7 @@ package com.tacocloud.jea.services;
 import com.tacocloud.data.IngredientRepository;
 import com.tacocloud.data.TacoRepository;
 import com.tacocloud.domain.Ingredient;
+import com.tacocloud.domain.Taco;
 import com.tacocloud.services.IngredientService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ public class IngredientServiceTest {
     private IngredientService ingredientService;
 
     @BeforeEach
-    public void mockRepository() {
+    public void initService() {
         ingredientRepository = Mockito.mock(IngredientRepository.class);
         tacoRepository = Mockito.mock(TacoRepository.class);
         ingredient = new Ingredient("TEST", "Test Ingredient", Ingredient.Type.CHEESE);
@@ -76,5 +77,19 @@ public class IngredientServiceTest {
         var saved = ingredientService.saveIngredient(ingredient);
 
         assertThat(saved.isPresent()).isFalse();
+    }
+
+    @Test
+    public void shouldDeleteIngredientFromTaco() {
+        Taco taco = new Taco();
+        taco.setName("My Awesome Taco");
+        taco.addIngredient(ingredient);
+
+        when(ingredientRepository.findById(any())).thenReturn(Optional.ofNullable(ingredient));
+        when(tacoRepository.findAll()).thenReturn(List.of(taco));
+
+        ingredientService.deleteIngredientById("TEST");
+
+        assertThat(taco.getIngredients().contains(ingredient)).isFalse();
     }
 }
